@@ -1,0 +1,52 @@
+{
+  "name": "fluent-leancloud",
+  "version": "0.2.0",
+  "description": "fluent lean cloud api builder",
+  "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/skinnyworm/fluent-leancloud.git"
+  },
+  "scripts": {
+    "test": "jest --verbose --no-cache",
+    "babel": "babel --presets es2015,stage-0 --ignore node_modules,**/__tests__/*,**/__mocks__/*",
+    "clean": "rimraf ./dist && mkdir ./dist",
+    "build": "npm run clean && npm run babel -- ./src -d ./dist",
+    "prepublish": "npm run build"
+  },
+  "keywords": [
+    "es6",
+    "api",
+    "http",
+    "client",
+    "restful",
+    "leancloud"
+  ],
+  "author": "Alex Hu <askinnyworm@gmail.com> (https://github.com/skinnyworm)",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.13.1",
+    "fluent-client": "^0.2.0",
+    "isomorphic-fetch": "^2.2.1"
+  },
+  "devDependencies": {
+    "babel": "^6.5.2",
+    "babel-cli": "^6.10.1",
+    "babel-jest": "^15.0.0",
+    "babel-plugin-transform-async-to-generator": "^6.8.0",
+    "babel-polyfill": "^6.13.0",
+    "babel-preset-es2015": "^6.14.0",
+    "babel-preset-stage-0": "^6.5.0",
+    "jest": "^15.1.1",
+    "rimraf": "^2.5.2"
+  },
+  "jest": {
+    "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
+    "preprocessorIgnorePatterns": [
+      "/node_modules/"
+    ],
+    "testPathIgnorePatterns": [
+      "node_modules"
+    ]
+  }
+}
