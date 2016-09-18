@@ -2,7 +2,7 @@
 
 Examples:
 
-```
+```javascript
 # code in ES6
 
 const appId = "app id"
