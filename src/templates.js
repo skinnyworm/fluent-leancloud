@@ -10,12 +10,12 @@ const resource = ()=>({
       args: ['filter'], //'where', 'order', 'limit', 'skip', 'keys'
       verb: 'get',
       params: ({filter})=>{
-        const {where, ...other} = filter;
-        let params = {}
+        const {where, ...other} = filter || {};
+        let query = {}
         if(where){
-          params = {where: JSON.stringify(where)}
+          query = {where: JSON.stringify(where)}
         }
-        return merge(params, other);
+        return merge(query, other);
       },
     },
 

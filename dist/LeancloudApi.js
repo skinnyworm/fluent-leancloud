@@ -5,7 +5,6 @@ var _require = require('fluent-client');
 var FluentClient = _require.FluentClient;
 
 var LeancloudHttp = require('./LeancloudHttp');
-var FileStore = require('./FileStore');
 
 var _require2 = require('./templates');
 
@@ -27,10 +26,12 @@ module.exports = function (_ref) {
   }
 
   if (!(appKey || masterKey)) {
-    throw 'Must provide an appKey or a masterKey';
+    throw 'Must provide an appKey or a masterKey.';
   }
 
-  store = store || FileStore();
+  if (!store) {
+    throw 'Must define a store.';
+  }
 
   return FluentClient({
     template: resource,

@@ -18,23 +18,26 @@ var resource = function resource() {
         verb: 'get',
         params: function params(_ref) {
           var filter = _ref.filter;
-          var where = filter.where;
 
-          var other = _objectWithoutProperties(filter, ['where']);
+          var _ref2 = filter || {};
 
-          var params = {};
+          var where = _ref2.where;
+
+          var other = _objectWithoutProperties(_ref2, ['where']);
+
+          var query = {};
           if (where) {
-            params = { where: JSON.stringify(where) };
+            query = { where: JSON.stringify(where) };
           }
-          return merge(params, other);
+          return merge(query, other);
         }
       },
 
       count: {
         verb: 'get',
         args: ['where'],
-        params: function params(_ref2) {
-          var where = _ref2.where;
+        params: function params(_ref3) {
+          var where = _ref3.where;
 
           var params = {};
           if (where) {
@@ -58,9 +61,9 @@ var resource = function resource() {
       increase: {
         verb: 'put',
         args: ['field', 'amount'],
-        data: function data(_ref3) {
-          var field = _ref3.field;
-          var amount = _ref3.amount;
+        data: function data(_ref4) {
+          var field = _ref4.field;
+          var amount = _ref4.amount;
           return _defineProperty({}, field, { __op: "Increment", amount: amount });
         }
       },
@@ -94,9 +97,9 @@ var UserReducer = function UserReducer(store) {
       signUpOrlogInWithAuthData: {
         verb: 'post',
         args: ['data', 'provider'],
-        data: function data(_ref5) {
-          var _data = _ref5.data;
-          var provider = _ref5.provider;
+        data: function data(_ref6) {
+          var _data = _ref6.data;
+          var provider = _ref6.provider;
 
           return {
             authData: _defineProperty({}, provider, _data)
@@ -134,9 +137,9 @@ var UserReducer = function UserReducer(store) {
       connectAuth: {
         verb: 'put',
         args: ['data', 'provider'],
-        data: function data(_ref6) {
-          var _data2 = _ref6.data;
-          var provider = _ref6.provider;
+        data: function data(_ref7) {
+          var _data2 = _ref7.data;
+          var provider = _ref7.provider;
           return {
             authData: _defineProperty({}, provider, _data2)
           };
@@ -146,8 +149,8 @@ var UserReducer = function UserReducer(store) {
       disconnectAuth: {
         verb: 'put',
         args: ['provider'],
-        data: function data(_ref7) {
-          var provider = _ref7.provider;
+        data: function data(_ref8) {
+          var provider = _ref8.provider;
           return {
             authData: _defineProperty({}, provider, null)
           };
