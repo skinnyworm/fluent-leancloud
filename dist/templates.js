@@ -8,6 +8,8 @@ var merge = require('lodash/merge');
 
 var resource = function resource() {
   return {
+    restPath: true,
+
     collection: {
       create: {
         verb: 'post'
@@ -62,9 +64,10 @@ var resource = function resource() {
         verb: 'put',
         args: ['field', 'amount'],
         data: function data(_ref4) {
+          var id = _ref4.id;
           var field = _ref4.field;
           var amount = _ref4.amount;
-          return _defineProperty({}, field, { __op: "Increment", amount: amount });
+          return _defineProperty({ id: id }, field, { __op: "Increment", amount: amount });
         }
       },
       destroy: {
@@ -109,19 +112,19 @@ var UserReducer = function UserReducer(store) {
       },
       //login
       login: {
-        location: '/login',
+        base: '/login',
         verb: 'post',
         success: storeSessionToken
       },
       //请求验证用户邮箱
       requestEmailVerify: {
-        location: '/requestEmailVerify',
+        base: '/requestEmailVerify',
         verb: 'post',
         args: ['email']
       },
       //请求密码重设
       requestPasswordReset: {
-        location: '/requestPasswordReset',
+        base: '/requestPasswordReset',
         verb: 'post',
         args: ['email']
       }
@@ -138,9 +141,11 @@ var UserReducer = function UserReducer(store) {
         verb: 'put',
         args: ['data', 'provider'],
         data: function data(_ref7) {
+          var id = _ref7.id;
           var _data2 = _ref7.data;
           var provider = _ref7.provider;
           return {
+            id: id,
             authData: _defineProperty({}, provider, _data2)
           };
         }
@@ -150,8 +155,10 @@ var UserReducer = function UserReducer(store) {
         verb: 'put',
         args: ['provider'],
         data: function data(_ref8) {
+          var id = _ref8.id;
           var provider = _ref8.provider;
           return {
+            id: id,
             authData: _defineProperty({}, provider, null)
           };
         }
@@ -167,21 +174,21 @@ var SmsReducer = function SmsReducer(store) {
     sms.collection({
       //请求发送短信验证码
       requestSmsCode: {
-        location: '/requestSmsCode',
+        base: '/requestSmsCode',
         verb: 'post',
         args: ['mobilePhoneNumber']
       },
 
       //验证短信验证码
       verifySmsCode: {
-        location: '/verifySmsCode/:code',
+        base: '/verifySmsCode/:code',
         verb: 'post',
         args: ['code']
       },
 
       //使用手机号码注册或登录
       usersByMobilePhone: {
-        location: '/usersByMobilePhone',
+        base: '/usersByMobilePhone',
         verb: 'post',
         success: function success(user) {
           return store.setItem('@lc-session', user.sessionToken).then(function () {
@@ -192,35 +199,35 @@ var SmsReducer = function SmsReducer(store) {
 
       //请求发送用户手机号码验证短信
       requestMobilePhoneVerify: {
-        location: '/requestMobilePhoneVerify',
+        base: '/requestMobilePhoneVerify',
         verb: 'post',
         args: ['mobilePhoneNumber']
       },
 
       //使用"验证码"验证用户手机号码
       verifyMobilePhone: {
-        location: '/verifyMobilePhone/:code',
+        base: '/verifyMobilePhone/:code',
         verb: 'post',
         args: ['code']
       },
 
       //请求发送手机号码登录短信
       requestLoginSmsCode: {
-        location: '/requestLoginSmsCode',
+        base: '/requestLoginSmsCode',
         verb: 'post',
         args: ['mobilePhoneNumber']
       },
 
       //请求发送手机短信验证码重置用户密码
       requestPasswordResetBySmsCode: {
-        location: '/requestPasswordResetBySmsCode',
+        base: '/requestPasswordResetBySmsCode',
         verb: 'post',
         args: ['mobilePhoneNumber']
       },
 
       //验证手机短信验证码并重置密码。
       resetPasswordBySmsCode: {
-        location: '/requestPasswordResetBySmsCode/:code',
+        base: '/requestPasswordResetBySmsCode/:code',
         verb: 'put',
         args: ['code', 'password']
       }

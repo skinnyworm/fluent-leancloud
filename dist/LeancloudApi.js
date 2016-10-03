@@ -36,6 +36,6 @@ module.exports = function (_ref) {
   return FluentClient({
     template: resource,
     http: LeancloudHttp({ appId: appId, appKey: appKey, masterKey: masterKey, store: store, country: country })
-  }).define('User', { location: '/users' }, UserReducer(store));
+  }).define('User', { base: '/users' }, UserReducer(store));
   //.define('Sms',  {template:{}}, SmsReducer(store));
 };
