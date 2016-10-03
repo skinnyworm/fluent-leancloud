@@ -17,7 +17,7 @@ describe("Leancloud User Api", ()=>{
   pit('can get current login user', async ()=>{
     await api.User.me();
 
-    expect(http.argsOf('get')).toEqual(['/users/me', undefined]);
+    expect(http.argsOf('get')).toEqual(['/users/me', {}]);
   });
 
   pit('can register', async ()=>{

@@ -11,14 +11,14 @@ describe('Leancloud Api for user defined resources', ()=>{
   beforeEach(()=>{
     store = MockStore();
     api = LeancloudApi({appId:'appid', appKey: 'appKey', store});
-    api.define('Project', {location:'/classes/project'})
+    api.define('Project', {base:'/classes/project'})
     http = api.http;
   });
 
 
   pit('can find', async ()=>{
     await api.Project.find();
-    expect(http.argsOf('get')).toEqual(['/classes/project', undefined]);
+    expect(http.argsOf('get')).toEqual(['/classes/project', {}]);
   });
 
   pit('can create', async ()=>{
@@ -33,7 +33,7 @@ describe('Leancloud Api for user defined resources', ()=>{
 
   pit('can get instance', async ()=>{
     await api.Project(1).get();
-    expect(http.argsOf('get')).toEqual(['/classes/project/1', undefined]);
+    expect(http.argsOf('get')).toEqual(['/classes/project/1', {}]);
   });
 
   pit('can update instance', async ()=>{
@@ -44,7 +44,7 @@ describe('Leancloud Api for user defined resources', ()=>{
 
   pit('can destroy instance', async ()=>{
     await api.Project(1).destroy();
-    expect(http.argsOf('delete')).toEqual(['/classes/project/1', undefined]);
+    expect(http.argsOf('delete')).toEqual(['/classes/project/1', {}]);
   });
 
   pit('can increase instance field', async ()=>{

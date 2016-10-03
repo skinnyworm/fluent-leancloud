@@ -1,6 +1,8 @@
 const merge = require('lodash/merge');
 
 const resource = ()=>({
+  restPath: true,
+
   collection:{
     create:{
       verb: 'post'
@@ -43,7 +45,7 @@ const resource = ()=>({
     increase:{
       verb: 'put',
       args: ['field', 'amount'],
-      data: ({field, amount})=>({[field]:{__op:"Increment", amount}})
+      data: ({id, field, amount})=>({id, [field]:{__op:"Increment", amount}})
     },
     destroy:{
       verb: 'delete'
@@ -82,19 +84,19 @@ const UserReducer =(store)=> (user)=>{
     },
     //login
     login:{
-      location: '/login',
+      base: '/login',
       verb: 'post',
       success: storeSessionToken,
     },
     //请求验证用户邮箱
     requestEmailVerify:{
-      location: '/requestEmailVerify',
+      base: '/requestEmailVerify',
       verb: 'post',
       args: ['email'],
     },
     //请求密码重设
     requestPasswordReset:{
-      location: '/requestPasswordReset',
+      base: '/requestPasswordReset',
       verb: 'post',
       args: ['email']
     },
@@ -110,7 +112,8 @@ const UserReducer =(store)=> (user)=>{
     connectAuth:{
       verb:'put',
       args: ['data', 'provider'],
-      data: ({data, provider})=>({
+      data: ({id, data, provider})=>({
+        id,
         authData:{
           [provider] : data
         }
@@ -120,7 +123,8 @@ const UserReducer =(store)=> (user)=>{
     disconnectAuth:{
       verb:'put',
       args: ['provider'],
-      data: ({provider})=>({
+      data: ({id, provider})=>({
+        id,
         authData:{
           [provider] : null
         }
@@ -135,21 +139,21 @@ const SmsReducer = (store)=> (sms)=>{
   sms.collection({
     //请求发送短信验证码
     requestSmsCode:{
-      location: '/requestSmsCode',
+      base: '/requestSmsCode',
       verb:'post',
       args: ['mobilePhoneNumber']
     },
 
     //验证短信验证码
     verifySmsCode:{
-      location: '/verifySmsCode/:code',
+      base: '/verifySmsCode/:code',
       verb:'post',
       args: ['code'],
     },
 
     //使用手机号码注册或登录
     usersByMobilePhone:{
-      location: '/usersByMobilePhone',
+      base: '/usersByMobilePhone',
       verb: 'post',
       success: (user)=>{
         return store.setItem('@lc-session', user.sessionToken).then(()=>user);
@@ -158,35 +162,35 @@ const SmsReducer = (store)=> (sms)=>{
 
     //请求发送用户手机号码验证短信
     requestMobilePhoneVerify:{
-      location: '/requestMobilePhoneVerify',
+      base: '/requestMobilePhoneVerify',
       verb: 'post',
       args: ['mobilePhoneNumber']
     },
 
     //使用"验证码"验证用户手机号码
     verifyMobilePhone: {
-      location: '/verifyMobilePhone/:code',
+      base: '/verifyMobilePhone/:code',
       verb: 'post',
       args: ['code'],
     },
 
     //请求发送手机号码登录短信
     requestLoginSmsCode:{
-      location: '/requestLoginSmsCode',
+      base: '/requestLoginSmsCode',
       verb: 'post',
       args: ['mobilePhoneNumber']
     },
 
     //请求发送手机短信验证码重置用户密码
     requestPasswordResetBySmsCode:{
-      location: '/requestPasswordResetBySmsCode',
+      base: '/requestPasswordResetBySmsCode',
       verb: 'post',
       args: ['mobilePhoneNumber']
     },
 
     //验证手机短信验证码并重置密码。
     resetPasswordBySmsCode:{
-      location: '/requestPasswordResetBySmsCode/:code',
+      base: '/requestPasswordResetBySmsCode/:code',
       verb: 'put',
       args: ['code','password']
     }

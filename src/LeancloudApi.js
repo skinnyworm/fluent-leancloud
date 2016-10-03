@@ -20,6 +20,6 @@ module.exports = ({appId, appKey, masterKey, store, country})=>{
     template: resource,
     http: LeancloudHttp({appId, appKey, masterKey, store, country})
   })
-  .define('User', {location: '/users'}, UserReducer(store))
+  .define('User', {base: '/users'}, UserReducer(store))
   //.define('Sms',  {template:{}}, SmsReducer(store));
 }

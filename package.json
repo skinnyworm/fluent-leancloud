@@ -1,6 +1,6 @@
 {
   "name": "fluent-leancloud",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "fluent lean cloud api builder",
   "main": "dist/index.js",
   "repository": {
@@ -25,9 +25,9 @@
   "author": "Alex Hu <askinnyworm@gmail.com> (https://github.com/skinnyworm)",
   "license": "ISC",
   "dependencies": {
-    "lodash": "^4.13.1",
-    "fluent-client": "^0.2.0",
-    "isomorphic-fetch": "^2.2.1"
+    "fluent-client": "^0.2.2",
+    "isomorphic-fetch": "^2.2.1",
+    "lodash": "^4.13.1"
   },
   "devDependencies": {
     "babel": "^6.5.2",
