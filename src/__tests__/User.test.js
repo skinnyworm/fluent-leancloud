@@ -1,6 +1,5 @@
 jest.autoMockOff();
 jest.mock('../LeancloudHttp');
-jest.mock('../FileStore');
 
 const MockStore = require('../__mocks__/MockStore');
 const LeancloudApi = require('../LeancloudApi');

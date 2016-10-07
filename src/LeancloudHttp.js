@@ -1,15 +1,16 @@
+const { Http, Url } = require('fluent-client');
 const merge = require('lodash/merge');
-const md5 = require('./md5');
 const isomorphicFetch = require('isomorphic-fetch');
-const {Http, Url} = require('fluent-client');
+const md5 = require('crypto-js/md5');
+const md5str = (val)=>md5(val).toString();
 
 const SignRequest = ({appId, appKey, masterKey, store})=> ()=> {
   const sign = (appKey, masterKey)=>{
     const timestamp = Date.now();
     if(masterKey){
-      return `${md5(timestamp + masterKey)},${timestamp},master`
+      return `${md5str(timestamp + masterKey)},${timestamp},master`
     }else{
-      return `${md5(timestamp + appKey)},${timestamp}`
+      return `${md5str(timestamp + appKey)},${timestamp}`
     }
   }
 

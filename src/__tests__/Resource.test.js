@@ -1,17 +1,14 @@
 jest.autoMockOff();
 jest.mock('../LeancloudHttp');
-jest.mock('../FileStore');
-
-const MockStore = require('../__mocks__/MockStore');
 const LeancloudApi = require('../LeancloudApi');
 
 describe('Leancloud Api for user defined resources', ()=>{
   let api, http, store;
 
   beforeEach(()=>{
-    store = MockStore();
-    api = LeancloudApi({appId:'appid', appKey: 'appKey', store});
-    api.define('Project', {base:'/classes/project'})
+    store = require('../__mocks__/MockStore')();
+    api = LeancloudApi({appId:'appid', appKey: 'appKey', store})
+          .define('Project', {base:'/classes/project'});
     http = api.http;
   });
 

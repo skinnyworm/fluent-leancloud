@@ -1,6 +1,7 @@
-const {FluentClient} = require('fluent-client');
+const { FluentClient } = require('fluent-client');
 const LeancloudHttp = require('./LeancloudHttp');
-const {resource, UserReducer, SmsReducer} = require('./templates');
+const MemoStore = require('./MemoStore');
+const { resource, userReducer, sms } = require('./templates');
 
 module.exports = ({appId, appKey, masterKey, store, country})=>{
 
@@ -12,14 +13,12 @@ module.exports = ({appId, appKey, masterKey, store, country})=>{
     throw 'Must provide an appKey or a masterKey.'
   }
 
-  if(!store){
-    throw 'Must define a store.'
-  }
+  store = store || MemoStore();
 
   return FluentClient({
     template: resource,
     http: LeancloudHttp({appId, appKey, masterKey, store, country})
   })
-  .define('User', {base: '/users'}, UserReducer(store))
-  //.define('Sms',  {template:{}}, SmsReducer(store));
+  .define('User', {base: '/users'}, userReducer(store))
+  .define('Sms',  sms(store));
 }

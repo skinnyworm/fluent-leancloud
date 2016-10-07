@@ -1,2 +1,4 @@
-const LeancloudApi = require('./LeancloudApi');
-module.exports = LeancloudApi;
+module.exports = {
+  LeancloudApi: require('./LeancloudApi'),
+  LeancloudHttp: require('./LeancloudHttp')
+}
