@@ -12,7 +12,6 @@
 *.xml
 .DS_Store
 .project
-dist
 coverage
 scripts
 node_modules

@@ -1,6 +1,6 @@
 {
   "name": "fluent-leancloud",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "fluent lean cloud api builder",
   "main": "dist/index.js",
   "repository": {
