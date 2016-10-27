@@ -1,8 +1,4 @@
-const UserReducer = (store)=> (user)=>{
-
-  const storeSessionToken = (user)=>{
-    return store.setItem('@lc-session', user.sessionToken).then(()=>user);
-  }
+const UserReducer = (storeSessionToken)=> (user)=>{
 
   user.collection({
     //me

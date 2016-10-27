@@ -1,39 +1,26 @@
 'use strict';
 
-var _require = require('fluent-client');
+var ApiFactory = require('fluent-client/dist/ApiFactory');
 
-var FluentClient = _require.FluentClient;
+var _require = require('./templates');
 
-var LeancloudHttp = require('./LeancloudHttp');
-var MemoStore = require('./MemoStore');
-
-var _require2 = require('./templates');
-
-var resource = _require2.resource;
-var userReducer = _require2.userReducer;
-var sms = _require2.sms;
+var resource = _require.resource;
+var userReducer = _require.userReducer;
+var sms = _require.sms;
 
 
-module.exports = function (_ref) {
-  var appId = _ref.appId;
-  var appKey = _ref.appKey;
-  var masterKey = _ref.masterKey;
-  var store = _ref.store;
-  var country = _ref.country;
+module.exports = function RestfulClient(http) {
+  var factory = ApiFactory({ http: http, template: resource });
 
+  var storeSessionToken = function storeSessionToken(user) {
+    return Promise.resolve(http.store.setItem('@lc-session', user.sessionToken)).then(function () {
+      return user;
+    });
+  };
 
-  if (!appId) {
-    throw 'Must provide an appId';
-  }
-
-  if (!(appKey || masterKey)) {
-    throw 'Must provide an appKey or a masterKey.';
-  }
-
-  store = store || MemoStore();
-
-  return FluentClient({
-    template: resource,
-    http: LeancloudHttp({ appId: appId, appKey: appKey, masterKey: masterKey, store: store, country: country })
-  }).define('User', { base: '/users' }, userReducer(store)).define('Sms', sms(store));
+  return {
+    factory: factory,
+    User: factory({ base: '/users' }, userReducer(storeSessionToken)),
+    Sms: factory({ base: '', template: sms(storeSessionToken) })
+  };
 };

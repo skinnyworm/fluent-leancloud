@@ -1,20 +1,22 @@
 jest.autoMockOff();
 jest.mock('../LeancloudHttp');
 
-const MockStore = require('../__mocks__/MockStore');
-const LeancloudApi = require('../LeancloudApi');
+const MemoryStore = require('../MemoryStore');
+const LeancloudHttp = require('../LeancloudHttp');
+const RestfulClient = require('../RestfulClient');
 
 describe("Leancloud User Api", ()=>{
-  let api, http, store;
+  let User, http, store;
 
   beforeEach(()=>{
-    store = MockStore();
-    api = LeancloudApi({appId:'appid', appKey: 'appKey', store});
-    http = api.http;
+    http = LeancloudHttp({appId:'appid', appKey: 'appKey'});
+    store = MemoryStore();
+    http.store = store;
+    User = RestfulClient(http).User
   });
 
   pit('can get current login user', async ()=>{
-    await api.User.me();
+    await User.me();
 
     expect(http.argsOf('get')).toEqual(['/users/me', {}]);
   });
@@ -23,7 +25,7 @@ describe("Leancloud User Api", ()=>{
     http.responseOf('post', {sessionToken:'12345'});
     expect(await store.getItem('@lc-session')).not.toBeDefined();
 
-    await api.User.create({username:'username', password:'password'});
+    await User.create({username:'username', password:'password'});
     expect(http.argsOf('post')).toEqual(['/users', {username:'username', password:'password'}]);
     expect(await store.getItem('@lc-session')).toEqual('12345');
   });
@@ -32,7 +34,7 @@ describe("Leancloud User Api", ()=>{
     http.responseOf('post', {sessionToken:'12345'});
     expect(await store.getItem('@lc-session')).not.toBeDefined();
 
-    await api.User.login({username:'username', password:'password'});
+    await User.login({username:'username', password:'password'});
     expect(http.argsOf('post')).toEqual(['/login', {username:'username', password:'password'}]);
     expect(await store.getItem('@lc-session')).toEqual('12345');
   });
@@ -43,7 +45,7 @@ describe("Leancloud User Api", ()=>{
     const provider = 'weibo';
 
     expect(await store.getItem('@lc-session')).not.toBeDefined();
-    await api.User.signUpOrlogInWithAuthData(authData, provider);
+    await User.signUpOrlogInWithAuthData(authData, provider);
 
     expect(http.argsOf('post')).toEqual(['/users', {
       authData:{
@@ -56,19 +58,19 @@ describe("Leancloud User Api", ()=>{
   });
 
   pit('can request verfication email', async ()=>{
-    await api.User.requestEmailVerify('user@example.com');
+    await User.requestEmailVerify('user@example.com');
 
     expect(http.argsOf('post')).toEqual(['/requestEmailVerify', {email:'user@example.com'}]);
   });
 
   pit('can request reset password email', async ()=>{
-    await api.User.requestPasswordReset('user@example.com');
+    await User.requestPasswordReset('user@example.com');
 
     expect(http.argsOf('post')).toEqual(['/requestPasswordReset', {email:'user@example.com'}]);
   });
 
   pit("can update password", async ()=>{
-    await api.User(1).updatePassword('old', 'new');
+    await User(1).updatePassword('old', 'new');
 
     expect(http.argsOf('put')).toEqual(['/users/1/updatePassword', {old_password: 'old', new_password: 'new'}]);
   });
@@ -77,7 +79,7 @@ describe("Leancloud User Api", ()=>{
     const authData = {accessToken:'12345'}
     const provider = 'weibo';
 
-    await api.User(1).connectAuth(authData, provider);
+    await User(1).connectAuth(authData, provider);
     expect(http.argsOf('put')).toEqual(['/users/1', {
       authData:{
         weibo: authData
@@ -86,7 +88,7 @@ describe("Leancloud User Api", ()=>{
   });
 
   pit("can disconnect an auth provider from an existing user", async ()=>{
-    await api.User(1).disconnectAuth("weibo");
+    await User(1).disconnectAuth("weibo");
     expect(http.argsOf('put')).toEqual(['/users/1', {
       authData:{
         weibo: null

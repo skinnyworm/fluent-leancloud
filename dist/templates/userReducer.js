@@ -2,14 +2,8 @@
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var UserReducer = function UserReducer(store) {
+var UserReducer = function UserReducer(storeSessionToken) {
   return function (user) {
-
-    var storeSessionToken = function storeSessionToken(user) {
-      return store.setItem('@lc-session', user.sessionToken).then(function () {
-        return user;
-      });
-    };
 
     user.collection({
       //me
