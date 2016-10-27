@@ -2,7 +2,7 @@ jest.autoMockOff();
 jest.mock('../LeancloudHttp');
 const MemoryStore = require('../MemoryStore');
 const LeancloudHttp = require('../LeancloudHttp');
-const RestfulClient = require('../RestfulClient');
+const LeancloudApi = require('../LeancloudApi');
 
 describe('Leancloud Sms Api', ()=>{
   let Sms, http, store;
@@ -11,7 +11,7 @@ describe('Leancloud Sms Api', ()=>{
     http = LeancloudHttp({appId:'appid', appKey: 'appKey'});
     store = MemoryStore();
     http.store = store;
-    Sms = RestfulClient(http).Sms
+    Sms = LeancloudApi(http).Sms
   });
 
   pit('requestSmsCode - 请求发送短信验证码', async ()=>{

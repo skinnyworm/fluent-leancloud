@@ -1,7 +1,7 @@
 jest.autoMockOff();
 jest.mock('../LeancloudHttp');
 
-const RestfulClient = require('../RestfulClient');
+const LeancloudApi = require('../LeancloudApi');
 const LeancloudHttp = require('../LeancloudHttp');
 
 describe('Leancloud Api for user defined resources', ()=>{
@@ -9,7 +9,7 @@ describe('Leancloud Api for user defined resources', ()=>{
 
   beforeEach(()=>{
     http = LeancloudHttp({appId:'appid', appKey: 'appKey'});
-    factory = RestfulClient(http).factory;
+    factory = LeancloudApi(http).factory;
     Project = factory({base:'/classes/project'})
   });
 

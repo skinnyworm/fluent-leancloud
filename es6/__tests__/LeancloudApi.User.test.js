@@ -3,7 +3,7 @@ jest.mock('../LeancloudHttp');
 
 const MemoryStore = require('../MemoryStore');
 const LeancloudHttp = require('../LeancloudHttp');
-const RestfulClient = require('../RestfulClient');
+const LeancloudApi = require('../LeancloudApi');
 
 describe("Leancloud User Api", ()=>{
   let User, http, store;
@@ -12,7 +12,7 @@ describe("Leancloud User Api", ()=>{
     http = LeancloudHttp({appId:'appid', appKey: 'appKey'});
     store = MemoryStore();
     http.store = store;
-    User = RestfulClient(http).User
+    User = LeancloudApi(http).User
   });
 
   pit('can get current login user', async ()=>{
