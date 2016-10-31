@@ -37,18 +37,20 @@ var SignRequest = function SignRequest(_ref) {
   };
 };
 
-module.exports = function (_ref2) {
-  var appId = _ref2.appId;
-  var appKey = _ref2.appKey;
-  var masterKey = _ref2.masterKey;
-  var country = _ref2.country;
-  var store = _ref2.store;
-  var fetch = _ref2.fetch;
+module.exports = function (opts) {
+  if (!opts.fetch && typeof fetch === 'undefined') {
+    throw 'You need to either provide a fetch or use a fetch polyfill.';
+  }
 
-  store = store || MemoryStore();
+  var appId = opts.appId;
+  var appKey = opts.appKey;
+  var masterKey = opts.masterKey;
+  var country = opts.country;
+
+  var store = opts.store || MemoryStore();
   var apiBase = country === 'us' ? 'https://us-api.leancloud.cn/1.1' : 'https://api.leancloud.cn/1.1';
   var http = Http({
-    fetch: fetch,
+    fetch: opts.fetch || fetch,
     url: Url(apiBase),
     init: SignRequest({ appId: appId, appKey: appKey, masterKey: masterKey, store: store })
   });

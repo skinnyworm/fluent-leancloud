@@ -63,10 +63,7 @@ module.exports = function () {
 
     instance: {
       get: {
-        verb: 'get',
-        success: function success(response) {
-          return response.results[0];
-        }
+        verb: 'get'
       },
 
       update: {

@@ -121,7 +121,6 @@ var hasManyByRelation = function hasManyByRelation(_ref9) {
   var type = _ref9.type;
   var foreignType = _ref9.foreignType;
   var key = _ref9.key;
-  var foreignKey = _ref9.foreignKey;
 
   if (type && foreignType && key) {
     //TODO:: vaidate type, foreignType and key
