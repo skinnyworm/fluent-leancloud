@@ -1,6 +1,5 @@
-const UserReducer = (storeSessionToken)=> (user)=>{
-
-  user.collection({
+module.exports = (storeSessionToken)=>({
+  collection:{
     //me
     me:{
       verb: 'get',
@@ -47,9 +46,9 @@ const UserReducer = (storeSessionToken)=> (user)=>{
       base: '/requestPasswordReset',
       args: ['email']
     },
-  });
+  },
 
-  user.instance({
+  instance:{
     updatePassword: {
       verb: 'put',
       path: '/updatePassword',
@@ -77,8 +76,5 @@ const UserReducer = (storeSessionToken)=> (user)=>{
         }
       }),
     }
-
-  })
-}
-
-module.exports = UserReducer;
+  }
+});

@@ -1,13 +1,12 @@
-import merge from 'lodash/merge';
-
-const filterToParams = (filter)=>{
-  //filter has keys like 'where', 'order', 'limit', 'skip', 'keys'
-  const {where, ...other} = filter || {};
-  return where ? merge({where: JSON.stringify(where)}, other) : other;
-}
+const merge = require('lodash/merge');
+const buildRestPath = require('./buildRestPath')
+const filterToParams = require('./filterToParams');
+const {Count} = require('../FieldOps');
 
 module.exports = ()=>({
-  restPath: true,
+  config: {
+    buildPathTemplate: buildRestPath,
+  },
 
   collection:{
     // Create resource
@@ -32,7 +31,7 @@ module.exports = ()=>({
 
     count:{
       verb: 'get',
-      args: ['where'],
+      args: ['filter'],
       params: ({filter})=>merge(filterToParams(filter), {limit:0, count:1}),
       success:(response)=>response.count
     }
@@ -40,7 +39,8 @@ module.exports = ()=>({
 
   instance:{
     get:{
-      verb: 'get'
+      verb: 'get',
+      success:(response)=>response.results[0]
     },
 
     update: {
@@ -50,7 +50,7 @@ module.exports = ()=>({
     increase:{
       verb: 'put',
       args: ['field', 'amount'],
-      data: ({id, field, amount})=>({id, [field]:{__op:"Increment", amount}})
+      data: ({id, field, amount})=>({id, [field]: Count.increase(amount)})
     },
 
     destroy:{

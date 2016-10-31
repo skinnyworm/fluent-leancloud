@@ -2,10 +2,9 @@
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var UserReducer = function UserReducer(storeSessionToken) {
-  return function (user) {
-
-    user.collection({
+module.exports = function (storeSessionToken) {
+  return {
+    collection: {
       //me
       me: {
         verb: 'get',
@@ -53,9 +52,9 @@ var UserReducer = function UserReducer(storeSessionToken) {
         base: '/requestPasswordReset',
         args: ['email']
       }
-    });
+    },
 
-    user.instance({
+    instance: {
       updatePassword: {
         verb: 'put',
         path: '/updatePassword',
@@ -88,9 +87,6 @@ var UserReducer = function UserReducer(storeSessionToken) {
           };
         }
       }
-
-    });
+    }
   };
 };
-
-module.exports = UserReducer;

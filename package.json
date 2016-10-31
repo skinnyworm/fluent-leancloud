@@ -26,7 +26,7 @@
   "license": "ISC",
   "dependencies": {
     "crypto-js": "^3.1.6",
-    "fluent-client": "^0.3.0",
+    "fluent-client": "^0.3.2",
     "lodash": "^4.13.1"
   },
   "devDependencies": {

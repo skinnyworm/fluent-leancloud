@@ -1,50 +1,47 @@
 jest.autoMockOff();
-jest.mock('../LeancloudHttp');
+jest.mock('../../LeancloudHttp');
 
-const MemoryStore = require('../MemoryStore');
-const LeancloudHttp = require('../LeancloudHttp');
-const LeancloudApi = require('../LeancloudApi');
+const LeancloudHttp = require('../../LeancloudHttp');
+const ApiFactory = require('../../ApiFactory');
+const userTemplate = require('../userTemplate');
 
 describe("Leancloud User Api", ()=>{
-  let User, http, store;
+  let User, http, storeSessionToken;
 
   beforeEach(()=>{
     http = LeancloudHttp({appId:'appid', appKey: 'appKey'});
-    store = MemoryStore();
-    http.store = store;
-    User = LeancloudApi(http).User
+    const factory = ApiFactory(http)
+    storeSessionToken = jest.fn();
+    User = factory({type:'_User', template:userTemplate(storeSessionToken)});
   });
 
   pit('can get current login user', async ()=>{
     await User.me();
-
     expect(http.argsOf('get')).toEqual(['/users/me', {}]);
   });
 
   pit('can register', async ()=>{
     http.responseOf('post', {sessionToken:'12345'});
-    expect(await store.getItem('@lc-session')).not.toBeDefined();
-
     await User.create({username:'username', password:'password'});
+
     expect(http.argsOf('post')).toEqual(['/users', {username:'username', password:'password'}]);
-    expect(await store.getItem('@lc-session')).toEqual('12345');
+    expect(storeSessionToken.mock.calls.length).toEqual(1);
+    expect(storeSessionToken.mock.calls[0]).toEqual([{sessionToken:'12345'}]);
   });
 
   pit('can login', async ()=>{
     http.responseOf('post', {sessionToken:'12345'});
-    expect(await store.getItem('@lc-session')).not.toBeDefined();
-
     await User.login({username:'username', password:'password'});
+
     expect(http.argsOf('post')).toEqual(['/login', {username:'username', password:'password'}]);
-    expect(await store.getItem('@lc-session')).toEqual('12345');
+    expect(storeSessionToken.mock.calls.length).toEqual(1);
+    expect(storeSessionToken.mock.calls[0]).toEqual([{sessionToken:'12345'}]);
   });
 
   pit('can sign up or login a user with auth data', async ()=>{
     http.responseOf('post', {sessionToken:'12345'});
     const authData = {accessToken:'12345'}
     const provider = 'weibo';
-
-    expect(await store.getItem('@lc-session')).not.toBeDefined();
     await User.signUpOrlogInWithAuthData(authData, provider);
 
     expect(http.argsOf('post')).toEqual(['/users', {
@@ -54,7 +51,8 @@ describe("Leancloud User Api", ()=>{
         }
       }
     }]);
-    expect(await store.getItem('@lc-session')).toEqual('12345');
+    expect(storeSessionToken.mock.calls.length).toEqual(1);
+    expect(storeSessionToken.mock.calls[0]).toEqual([{sessionToken:'12345'}]);
   });
 
   pit('can request verfication email', async ()=>{
