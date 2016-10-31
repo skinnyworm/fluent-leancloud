@@ -40,7 +40,6 @@ module.exports = ()=>({
   instance:{
     get:{
       verb: 'get',
-      success:(response)=>response.results[0]
     },
 
     update: {

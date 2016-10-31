@@ -70,7 +70,7 @@ const hasMany = ({type, foreignType, key, foreignKey})=> {
   }
 }
 
-const hasManyByRelation = ({type, foreignType, key, foreignKey})=> {
+const hasManyByRelation = ({type, foreignType, key})=> {
   if(type && foreignType && key){
     //TODO:: vaidate type, foreignType and key
     return{
