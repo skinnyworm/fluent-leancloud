@@ -1,15 +1,15 @@
-# LeanCloud Restful客户端API
+# Fluent client api for LeanCloud services
 
 [![Build Status](https://travis-ci.org/skinnyworm/fluent-leancloud.svg?branch=master)](https://travis-ci.org/weui/react-weui) [![npm version](https://img.shields.io/npm/v/fluent-leancloud.svg)](https://www.npmjs.org/package/fluent-leancloud)
 ====
 
 ## 简介
 
-fluent-leancloud 用于帮助开发者构建基于 [LeanCloud](http://leancloud.cn) 服务的客户端API。这个项目的目标是为开发者提供一个除了官方SDK外的选择。也就是说，fluent-leancloud希望通过直接调用http restful endpoints实现数据的建模，ORM，用户管理，实时通讯等服务。构建一个简洁，可定制，轻量的开发工具集。
+fluent-leancloud 用于帮助开发者构建基于 [LeanCloud](http://leancloud.cn) 服务的流畅API。LeanCloud.cn 的云服务提供了足够的后台服务帮助开发者专注于App本身的开发。但是官方客户端SDK的设计上和当下流行的开发方式上有一些不匹配，以至于使用起来有相当的不便。特别是存储部分，由于使用了Data Access Object的模式，使得Data Object维护了大量的内部状态，这个和我们目前项目中所提倡的中的Immutable Data有很大的违和感。 这个项目的目标是希望通过直接调用http restful endpoints实现数据的建模，ORM，用户管理，实时通讯等服务。构建一个简洁，可定制，轻量的开发工具集，特别针对使用React, Flux, Immutable的环境，从而为开发者提供一个官方SDK外的选择。
 
 ### 使用场景
 
-fluent-leancloud 虽然不假设开发者的使用环境，但是设计初衷是为了构建一个轻量级的工具集，所以特别适用于以React,Redux和Webpack作为工具链的开发环境。这里简单介绍一下三种使用场景。
+fluent-leancloud 并不假设开发者的使用环境，设计初衷是为了构建一个轻量级的工具集，这里从基本用途到ORM建模的路径简单介绍一下三种使用场景。
 
 #### 1. 作为一个简单的HTTP客户端使用
 
@@ -56,12 +56,8 @@ http.delete('/classes/Todo/57e5c7b78ac247005bc28e82').then(console.log, console.
 import 'whatwg-fetch';
 import {LeancloudHttp} from 'fluent-leancloud';
 
-// 创建一个Http client
-const http = LeancloudHttp({
-  appId: "应用appId",
-  appKey: '应用appKey',
-  masterKey: '应用masterKey,可选是可选项'
-})
+// 创建一个Http client, 和之前示例一致，此处省略...
+const http = ...
 
 // 创建 API factory
 const {factory} = LeancloudApi(http)
@@ -135,11 +131,10 @@ const Todo = factory({type: 'Todo'}, (todo)=>{
     addTags:{
       verb: 'put',
       args: ['labels'],
-      data: ({id, label})=>({id, tags: Array.addUnique(labels)})
+      data: ({id, labels})=>({id, tags: Array.addUnique(labels)})
     }
   })
 })
-
 
 // --------------------
 //  instance 方法
@@ -218,4 +213,95 @@ Comment(commentId).post.get().then(console.log, console.error)
 
 ```
 
+- hasMany by pointer关系定义了3个方法，分别是 `find`, `count`, `create`
+- belongsTo关系定义了2个方法，分别是 `get`, `set` 用于设定Pointer
+
+
 ##### HasMany by relation 关系
+
+除了使用Pointer外，我们还可以使用LeanCloud提供的Relation作为构建hasMany关系的方法。以LeanCloud内建的Role为列，它包含了两个relations，一个是users, 一个是roles。
+
+我们可以这样定义:
+
+```javascript
+...
+// 创建 API factory
+const {factory} = LeancloudApi(http)
+
+// 定义 Role Api
+const Role = factory({type:'_Role'}, role=>{
+  role.hasMany('users', {type: '_User', by: 'relations'});
+  role.hasMany('roles', {type: '_Role', by: 'relations'});
+})
+```
+
+使用示例:
+
+```javascript
+...
+async function seedRolesExample(){
+  // 创建 admin role
+  const {objectId: admin} = await Role.create({name:'admin', ACL:{"*":{read: true}}});
+  // 创建 manager role
+  const {objectId: manager} = await Role.create({name:'manager', ACL:{"*":{read: true}}});
+  // 将 manager role 添加到 admin roles
+  await Role(admin).roles.add(manager);
+
+  return {admin, manager}
+}
+
+
+async function userRelationExamples(roleId, userId){
+  // 将用户添加到一个Role中
+  await Role(roleId).users.add(userId);
+  // 将用户从一个Role中移除
+  await Role(roleId).users.remove(userId);
+  // 查询一个Role下的所有用户
+  await Role(roleId).users.find({where:{verified:false}});
+  // 查询一个Role下的所有用户数量
+  await Role(roleId).users.count();
+}
+
+// 执行 seedRolesExample
+seedRolesExample().then(console.log, console.error)
+```
+
+这上面的示例中我们定义了一个hasMany by relations的关系，定义方法为 `role.hasMany('users', {type: '_User', by: 'relations'});`。 目前hasMany by relations关系定义了4个方法，分别是 `find`, `count`, `add`, `remove`
+
+我们会根据需要在后续的版本中加入hasMany by through的关系，用于描述多对多关系中的另一边，在_Role这个场景中，我们可以在_User端定义`user.hasMany('roles', {type:'_Role', by: 'through'})`的关系。
+
+需要注意的是我们用下划线来表明LeanCloud内部的数据表，比如_User和_Role。
+
+
+ ## 最佳实践 Best Practice
+
+ ### 关于Store (MemoryStore, FileStore, SessionStore)
+
+ (补充文档)
+
+ ### Node Express 和 KOA 整合
+
+ (补充文档)
+
+ ### React Redux Flux 整合
+
+ (补充文档)
+
+ ### React Native 注意事项
+
+ (补充文档)
+
+
+ ## 内建模型
+
+ ### User
+
+ (补充文档)
+
+ ### Sms
+
+ (补充文档)
+
+ ### Push
+
+ (补充文档)
