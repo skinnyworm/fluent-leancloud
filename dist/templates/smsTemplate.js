@@ -24,9 +24,9 @@ module.exports = function (storeSessionToken) {
         base: '/usersByMobilePhone',
         args: ["mobilePhoneNumber", "smsCode", "opts"],
         data: function data(_ref) {
-          var mobilePhoneNumber = _ref.mobilePhoneNumber;
-          var smsCode = _ref.smsCode;
-          var password = _ref.opts.password;
+          var mobilePhoneNumber = _ref.mobilePhoneNumber,
+              smsCode = _ref.smsCode,
+              password = _ref.opts.password;
           return { mobilePhoneNumber: mobilePhoneNumber, smsCode: smsCode, password: password };
         },
         success: storeSessionToken

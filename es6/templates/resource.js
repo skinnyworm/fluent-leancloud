@@ -19,7 +19,7 @@ module.exports = ()=>({
       args: ['filter'],
       verb: 'get',
       params: ({filter})=>filterToParams(filter),
-      success:(response)=>response.results
+      success:(response)=>response
     },
 
     findOne:{

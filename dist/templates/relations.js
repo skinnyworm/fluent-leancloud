@@ -2,23 +2,20 @@
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var _require = require('../FieldTypes');
+var _require = require('../FieldTypes'),
+    pathOf = _require.pathOf,
+    Pointer = _require.Pointer;
 
-var pathOf = _require.pathOf;
-var Pointer = _require.Pointer;
-
-var _require2 = require('../FieldOps');
-
-var Relation = _require2.Relation;
-
+var _require2 = require('../FieldOps'),
+    Relation = _require2.Relation;
 
 var filterToParams = require('./filterToParams');
 var merge = require('lodash/merge');
 
 var belongsTo = function belongsTo(_ref) {
-  var type = _ref.type;
-  var foreignType = _ref.foreignType;
-  var key = _ref.key;
+  var type = _ref.type,
+      foreignType = _ref.foreignType,
+      key = _ref.key;
 
   if (type && foreignType && key) {
     return {
@@ -39,8 +36,8 @@ var belongsTo = function belongsTo(_ref) {
           path: '/:id',
           args: ["foreignId"],
           data: function data(_ref3) {
-            var id = _ref3.id;
-            var foreignId = _ref3.foreignId;
+            var id = _ref3.id,
+                foreignId = _ref3.foreignId;
             return _defineProperty({ id: id }, key, Pointer(foreignType)(foreignId));
           }
         }
@@ -52,10 +49,10 @@ var belongsTo = function belongsTo(_ref) {
 };
 
 var hasMany = function hasMany(_ref5) {
-  var type = _ref5.type;
-  var foreignType = _ref5.foreignType;
-  var key = _ref5.key;
-  var foreignKey = _ref5.foreignKey;
+  var type = _ref5.type,
+      foreignType = _ref5.foreignType,
+      key = _ref5.key,
+      foreignKey = _ref5.foreignKey;
 
   if (type && foreignType && key && foreignKey) {
     //TODO:: vaidate type, foreignType, key and foreignKey
@@ -66,16 +63,16 @@ var hasMany = function hasMany(_ref5) {
           args: ['filter'],
           base: pathOf(foreignType),
           params: function params(_ref6) {
-            var filter = _ref6.filter;
-            var id = _ref6.id;
-            var relation = _ref6.relation;
-            var relationIds = _ref6.relationIds;
+            var filter = _ref6.filter,
+                id = _ref6.id,
+                relation = _ref6.relation,
+                relationIds = _ref6.relationIds;
 
             filter = merge(filter, { where: _defineProperty({}, foreignKey, Pointer(type)(id)) });
             return filterToParams(filter);
           },
           success: function success(response) {
-            return response.results;
+            return response;
           }
         },
 
@@ -84,10 +81,10 @@ var hasMany = function hasMany(_ref5) {
           args: ['filter'],
           base: pathOf(foreignType),
           params: function params(_ref7) {
-            var filter = _ref7.filter;
-            var id = _ref7.id;
-            var relation = _ref7.relation;
-            var relationIds = _ref7.relationIds;
+            var filter = _ref7.filter,
+                id = _ref7.id,
+                relation = _ref7.relation,
+                relationIds = _ref7.relationIds;
 
             filter = merge(filter, { where: _defineProperty({}, foreignKey, Pointer(type)(id)), limit: 0, count: 1 });
             return filterToParams(filter);
@@ -102,10 +99,10 @@ var hasMany = function hasMany(_ref5) {
           args: ['data'],
           base: pathOf(foreignType),
           data: function data(_ref8) {
-            var _data = _ref8.data;
-            var id = _ref8.id;
-            var relations = _ref8.relations;
-            var relationIds = _ref8.relationIds;
+            var _data = _ref8.data,
+                id = _ref8.id,
+                relations = _ref8.relations,
+                relationIds = _ref8.relationIds;
 
             return Object.assign(_data, _defineProperty({}, foreignKey, Pointer(type)(id)));
           }
@@ -118,9 +115,9 @@ var hasMany = function hasMany(_ref5) {
 };
 
 var hasManyByRelation = function hasManyByRelation(_ref9) {
-  var type = _ref9.type;
-  var foreignType = _ref9.foreignType;
-  var key = _ref9.key;
+  var type = _ref9.type,
+      foreignType = _ref9.foreignType,
+      key = _ref9.key;
 
   if (type && foreignType && key) {
     //TODO:: vaidate type, foreignType and key
@@ -131,14 +128,14 @@ var hasManyByRelation = function hasManyByRelation(_ref9) {
           args: ['filter'],
           base: pathOf(foreignType),
           data: function data(_ref10) {
-            var filter = _ref10.filter;
-            var id = _ref10.id;
+            var filter = _ref10.filter,
+                id = _ref10.id;
 
             filter = merge(filter, { where: { $relatedTo: { object: Pointer(type)(id), key: key } } });
             return filterToParams(filter);
           },
           success: function success(response) {
-            return response.results;
+            return response;
           }
         },
 
@@ -147,8 +144,8 @@ var hasManyByRelation = function hasManyByRelation(_ref9) {
           args: ['filter'],
           base: pathOf(foreignType),
           data: function data(_ref11) {
-            var filter = _ref11.filter;
-            var id = _ref11.id;
+            var filter = _ref11.filter,
+                id = _ref11.id;
 
             filter = merge(filter, { where: { $relatedTo: { object: Pointer(type)(id), key: key } }, limit: 0, count: 1 });
             return filterToParams(filter);
@@ -163,8 +160,8 @@ var hasManyByRelation = function hasManyByRelation(_ref9) {
           args: ['ids'],
           path: '/:id',
           data: function data(_ref12) {
-            var ids = _ref12.ids;
-            var id = _ref12.id;
+            var ids = _ref12.ids,
+                id = _ref12.id;
             return _defineProperty({ id: id }, key, Relation(foreignType).add(ids));
           }
         },
@@ -174,8 +171,8 @@ var hasManyByRelation = function hasManyByRelation(_ref9) {
           args: ['ids'],
           path: '/:id',
           data: function data(_ref14) {
-            var ids = _ref14.ids;
-            var id = _ref14.id;
+            var ids = _ref14.ids,
+                id = _ref14.id;
             return _defineProperty({ id: id }, key, Relation(foreignType).remove(ids));
           }
         }

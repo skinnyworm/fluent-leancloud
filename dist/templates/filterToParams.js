@@ -6,11 +6,9 @@ var merge = require('lodash/merge');
 
 module.exports = function filterToParams(filter) {
   //filter has keys like 'where', 'order', 'limit', 'skip', 'keys'
-  var _ref = filter || {};
-
-  var where = _ref.where;
-
-  var other = _objectWithoutProperties(_ref, ['where']);
+  var _ref = filter || {},
+      where = _ref.where,
+      other = _objectWithoutProperties(_ref, ['where']);
 
   return where ? merge({ where: JSON.stringify(where) }, other) : other;
 };

@@ -22,8 +22,8 @@ module.exports = function (storeSessionToken) {
         verb: 'post',
         args: ['data', 'provider'],
         data: function data(_ref) {
-          var _data = _ref.data;
-          var provider = _ref.provider;
+          var _data = _ref.data,
+              provider = _ref.provider;
 
           return {
             authData: _defineProperty({}, provider, _data)
@@ -65,9 +65,9 @@ module.exports = function (storeSessionToken) {
         verb: 'put',
         args: ['data', 'provider'],
         data: function data(_ref2) {
-          var id = _ref2.id;
-          var _data2 = _ref2.data;
-          var provider = _ref2.provider;
+          var id = _ref2.id,
+              _data2 = _ref2.data,
+              provider = _ref2.provider;
           return {
             id: id,
             authData: _defineProperty({}, provider, _data2)
@@ -79,8 +79,8 @@ module.exports = function (storeSessionToken) {
         verb: 'put',
         args: ['provider'],
         data: function data(_ref3) {
-          var id = _ref3.id;
-          var provider = _ref3.provider;
+          var id = _ref3.id,
+              provider = _ref3.provider;
           return {
             id: id,
             authData: _defineProperty({}, provider, null)

@@ -11,13 +11,12 @@ var isEmpty = require('lodash/isEmpty');
  * for leancloud path patterns.
  */
 module.exports = function buildRestPath(memo, opts) {
-  var _opts$location = opts.location;
-  var base = _opts$location.base;
-  var path = _opts$location.path;
-  var id = _opts$location.id;
-  var relations = _opts$location.relations;
-
-  var relationIds = _objectWithoutProperties(_opts$location, ['base', 'path', 'id', 'relations']);
+  var _opts$location = opts.location,
+      base = _opts$location.base,
+      path = _opts$location.path,
+      id = _opts$location.id,
+      relations = _opts$location.relations,
+      relationIds = _objectWithoutProperties(_opts$location, ['base', 'path', 'id', 'relations']);
 
   var props = memo.props;
   // make path from base

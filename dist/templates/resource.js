@@ -6,10 +6,8 @@ var merge = require('lodash/merge');
 var buildRestPath = require('./buildRestPath');
 var filterToParams = require('./filterToParams');
 
-var _require = require('../FieldOps');
-
-var Count = _require.Count;
-
+var _require = require('../FieldOps'),
+    Count = _require.Count;
 
 module.exports = function () {
   return {
@@ -32,7 +30,7 @@ module.exports = function () {
           return filterToParams(filter);
         },
         success: function success(response) {
-          return response.results;
+          return response;
         }
       },
 
@@ -74,9 +72,9 @@ module.exports = function () {
         verb: 'put',
         args: ['field', 'amount'],
         data: function data(_ref4) {
-          var id = _ref4.id;
-          var field = _ref4.field;
-          var amount = _ref4.amount;
+          var id = _ref4.id,
+              field = _ref4.field,
+              amount = _ref4.amount;
           return _defineProperty({ id: id }, field, Count.increase(amount));
         }
       },

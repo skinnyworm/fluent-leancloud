@@ -1,8 +1,7 @@
 'use strict';
 
-var _require = require('./FieldTypes');
-
-var Pointer = _require.Pointer;
+var _require = require('./FieldTypes'),
+    Pointer = _require.Pointer;
 
 var isArray = require('lodash/isArray');
 

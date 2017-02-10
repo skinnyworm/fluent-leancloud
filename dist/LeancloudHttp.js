@@ -10,10 +10,10 @@ var Http = require('fluent-client/dist/Http');
 var Url = require('fluent-client/dist/Url');
 
 var SignRequest = function SignRequest(_ref) {
-  var appId = _ref.appId;
-  var appKey = _ref.appKey;
-  var masterKey = _ref.masterKey;
-  var store = _ref.store;
+  var appId = _ref.appId,
+      appKey = _ref.appKey,
+      masterKey = _ref.masterKey,
+      store = _ref.store;
   return function () {
     var sign = function sign(appKey, masterKey) {
       var timestamp = Date.now();
@@ -42,10 +42,10 @@ module.exports = function (opts) {
     throw 'You need to either provide a fetch or use a fetch polyfill.';
   }
 
-  var appId = opts.appId;
-  var appKey = opts.appKey;
-  var masterKey = opts.masterKey;
-  var country = opts.country;
+  var appId = opts.appId,
+      appKey = opts.appKey,
+      masterKey = opts.masterKey,
+      country = opts.country;
 
   var store = opts.store || MemoryStore();
   var apiBase = country === 'us' ? 'https://us-api.leancloud.cn/1.1' : 'https://api.leancloud.cn/1.1';
