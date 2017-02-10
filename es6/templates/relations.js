@@ -41,7 +41,7 @@ const hasMany = ({type, foreignType, key, foreignKey})=> {
             filter = merge(filter, {where:{[foreignKey]: Pointer(type)(id)}});
             return filterToParams(filter);
           },
-          success:(response)=>response.results
+          success:(response)=>response
         },
 
         count:{
@@ -83,7 +83,7 @@ const hasManyByRelation = ({type, foreignType, key})=> {
             filter = merge(filter, {where:{$relatedTo: {object: Pointer(type)(id), key}}});
             return filterToParams(filter);
           },
-          success:(response)=>response.results
+          success:(response)=>response
         },
 
         count: {

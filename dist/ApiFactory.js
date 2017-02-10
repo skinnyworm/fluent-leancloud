@@ -5,18 +5,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 var merge = require('lodash/merge');
 var createApi = require('fluent-client/dist/createApi');
 
-var _require = require('./FieldTypes');
-
-var pathOf = _require.pathOf;
+var _require = require('./FieldTypes'),
+    pathOf = _require.pathOf;
 
 var resource = require('./templates/resource');
 
-var _require2 = require('./templates/relations');
-
-var _hasMany = _require2.hasMany;
-var hasManyByRelation = _require2.hasManyByRelation;
-var _belongsTo = _require2.belongsTo;
-
+var _require2 = require('./templates/relations'),
+    _hasMany = _require2.hasMany,
+    hasManyByRelation = _require2.hasManyByRelation,
+    _belongsTo = _require2.belongsTo;
 
 var reduceTemplate = function reduceTemplate(initial, type, reduceFn) {
   var template = typeof initial === 'function' ? initial() : initial;
@@ -46,9 +43,9 @@ var reduceTemplate = function reduceTemplate(initial, type, reduceFn) {
     },
 
     hasMany: function hasMany(key, _ref2) {
-      var by = _ref2.by;
-      var foreignType = _ref2.type;
-      var foreignKey = _ref2.foreignKey;
+      var by = _ref2.by,
+          foreignType = _ref2.type,
+          foreignKey = _ref2.foreignKey;
 
       if (!foreignType) {
         throw "Must specify the 'type' in a hasMany relation.";
@@ -77,8 +74,8 @@ var reduceTemplate = function reduceTemplate(initial, type, reduceFn) {
 
 module.exports = function ApiFactory(http) {
   return function (_ref3, reduceFn) {
-    var type = _ref3.type;
-    var template = _ref3.template;
+    var type = _ref3.type,
+        template = _ref3.template;
 
     var initial = template || resource;
     return createApi({ http: http, base: pathOf(type), template: reduceTemplate(initial, type, reduceFn) });
